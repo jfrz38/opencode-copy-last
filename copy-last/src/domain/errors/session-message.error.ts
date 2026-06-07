@@ -1,7 +1,8 @@
 import { CopyLastError } from "./copy-last.error.js";
+import type { SessionMessageRole } from "../message/session-message-role.js";
 
 export class NoMessagesFoundError extends CopyLastError {
-  constructor(role: "agent" | "user") {
+  constructor(role: SessionMessageRole) {
     super(`No ${role} messages found`);
     this.name = "NoMessagesFoundError";
   }

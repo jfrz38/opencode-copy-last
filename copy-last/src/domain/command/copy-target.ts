@@ -1,29 +1,22 @@
 import { PairTargetIsNotMessageRoleError } from "../errors/copy-target.error.js";
+import { COPY_TARGET, type CopyTargetValue, type MessageCopyTargetValue } from "./copy-target-value.js";
 
-const AGENT = 'agent' as const;
-const USER = 'user' as const;
-const PAIR = 'pair' as const;
-
-type Agent = typeof AGENT;
-type User = typeof USER;
-type Pair = typeof PAIR;
-
-export type CopyTargetValue = Agent | User | Pair;
+export type { CopyTargetValue } from "./copy-target-value.js";
 
 const TARGET_ALIASES: Record<string, CopyTargetValue> = {
-  agent: AGENT,
-  assistant: AGENT,
-  user: USER,
-  me: USER,
-  pair: PAIR,
-  us: PAIR,
+  agent: COPY_TARGET.AGENT,
+  assistant: COPY_TARGET.AGENT,
+  user: COPY_TARGET.USER,
+  me: COPY_TARGET.USER,
+  pair: COPY_TARGET.PAIR,
+  us: COPY_TARGET.PAIR,
 };
 
 export class CopyTarget {
   private constructor(private readonly target: CopyTargetValue) {}
 
   static default(): CopyTarget {
-    return new CopyTarget(AGENT);
+    return new CopyTarget(COPY_TARGET.AGENT);
   }
 
   static fromAlias(value: string): CopyTarget | undefined {
@@ -43,8 +36,8 @@ export class CopyTarget {
     return this.target === value;
   }
 
-  assertMessageRole(): Agent | User {
-    if (this.target === PAIR) {
+  assertMessageRole(): MessageCopyTargetValue {
+    if (this.target === COPY_TARGET.PAIR) {
       throw new PairTargetIsNotMessageRoleError();
     }
     return this.target;
