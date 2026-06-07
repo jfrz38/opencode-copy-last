@@ -28,9 +28,14 @@
     "build": "pnpm clean && tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "package": "pnpm pack",
+    "pack:dry-run": "pnpm publish --dry-run",
+    "publish:npm": "pnpm publish --access public",
     "prepack": "pnpm build",
-    "prepublishOnly": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+    "prepublishOnly": "pnpm check"
   },
   "keywords": [
     "opencode",
