@@ -1,3 +1,4 @@
+import { MessageId } from "../../domain/message/message-id.value-object.js";
 import type { CopyLastCommandEvent } from "./opencode-command-event-parser.adapter.js";
 import type { OpenCodeValueReader } from "./opencode-value-reader.js";
 
@@ -28,7 +29,7 @@ export class OpenCodeCommandEventMapper implements OpenCodeCommandEventMapperCon
     return {
       sessionID,
       arguments: this.valueReader.string(input.arguments) ?? "",
-      messageID: this.valueReader.string(input.messageID),
+      messageID: MessageId.fromString(this.valueReader.string(input.messageID)),
     };
   }
 }

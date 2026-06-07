@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { MessageId } from "../../../src/domain/message/message-id.value-object.js";
 import { SessionMessage } from "../../../src/domain/message/session-message.js";
 import type { OpenCodeSessionMessageMapperContract } from "../../../src/infrastructure/opencode/opencode-session-message.mapper.js";
 import { OpenCodeSessionReader } from "../../../src/infrastructure/opencode/opencode-session-reader.adapter.js";
@@ -18,11 +19,12 @@ describe("OpenCodeSessionReader", () => {
       toSessionMessages: vi.fn((entry) => entry === entries[0] ? [firstMessage] : [secondMessage]),
     };
 
-    const messages = await new OpenCodeSessionReader(client, mapper).read("session-1", "cmd");
+    const commandMessageID = MessageId.fromString("cmd");
+    const messages = await new OpenCodeSessionReader(client, mapper).read("session-1", commandMessageID);
 
-    expect(client.session.messages).toHaveBeenCalledWith({ path: { id: "session-1" } });
-    expect(mapper.toSessionMessages).toHaveBeenNthCalledWith(1, entries[0], "cmd");
-    expect(mapper.toSessionMessages).toHaveBeenNthCalledWith(2, entries[1], "cmd");
+    expect(client.session.messages).toHaveBeenCalledWith({ path: { id: "session-1" }, responseStyle: "data" });
+    expect(mapper.toSessionMessages).toHaveBeenNthCalledWith(1, entries[0], commandMessageID);
+    expect(mapper.toSessionMessages).toHaveBeenNthCalledWith(2, entries[1], commandMessageID);
     expect(messages).toEqual([firstMessage, secondMessage]);
   });
 

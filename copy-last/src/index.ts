@@ -7,15 +7,17 @@ import { MarkdownMessageFormatter } from "./domain/message/markdown-message-form
 import { MessageSelector } from "./domain/message/message-selector.service.js";
 import { ClipboardyClipboardWriter } from "./infrastructure/clipboard/clipboardy-clipboard-writer.adapter.js";
 import { abortHandledCopyLastCommand } from "./infrastructure/opencode/opencode-command-flow-control.js";
+import { OpenCodeCommandEventMapper } from "./infrastructure/opencode/opencode-command-event.mapper.js";
+import { OpenCodeCommandEventParser } from "./infrastructure/opencode/opencode-command-event-parser.adapter.js";
 import { OpenCodeNotifier } from "./infrastructure/opencode/opencode-notifier.adapter.js";
 import { OpenCodeSessionMessageMapper } from "./infrastructure/opencode/opencode-session-message.mapper.js";
 import { OpenCodeSessionReader } from "./infrastructure/opencode/opencode-session-reader.adapter.js";
 import { OpenCodeValueReader } from "./infrastructure/opencode/opencode-value-reader.js";
 
-const COMMAND_NAME = "copy-last";
-
 export default (async ({ client }) => {
-  const sessionMessageMapper = new OpenCodeSessionMessageMapper(new OpenCodeValueReader());
+  const valueReader = new OpenCodeValueReader();
+  const commandEventParser = new OpenCodeCommandEventParser(new OpenCodeCommandEventMapper(valueReader));
+  const sessionMessageMapper = new OpenCodeSessionMessageMapper(valueReader);
   const notifier = new OpenCodeNotifier(client);
   const useCase = new CopyLastUseCase(
     new OpenCodeSessionReader(client, sessionMessageMapper),
@@ -27,13 +29,14 @@ export default (async ({ client }) => {
 
   return {
     "command.execute.before": async (input) => {
-      if (input.command !== COMMAND_NAME) {
+      const event = commandEventParser.parse(input);
+      if (!event) {
         return;
       }
 
       try {
         const result = await useCase.execute(
-          new CopyLastRequest(input.arguments, input.sessionID),
+          new CopyLastRequest(event.arguments, event.sessionID, event.messageID),
         );
         await notifier.success(result.command);
       } catch (error) {

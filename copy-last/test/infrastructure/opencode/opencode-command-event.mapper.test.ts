@@ -14,7 +14,7 @@ describe("OpenCodeCommandEventMapper", () => {
     })).toEqual({
       sessionID: "session-1",
       arguments: "user 2",
-      messageID: "cmd",
+      messageID: expect.objectContaining({ value: "cmd" }),
     });
   });
 

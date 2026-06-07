@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { MessageId } from "../../../src/domain/message/message-id.value-object.js";
 import { OpenCodeSessionMessageMapper } from "../../../src/infrastructure/opencode/opencode-session-message.mapper.js";
 import { OpenCodeValueReader } from "../../../src/infrastructure/opencode/opencode-value-reader.js";
 
@@ -28,7 +29,7 @@ describe("OpenCodeSessionMessageMapper", () => {
   });
 
   it("excludes the command message", () => {
-    expect(mapper.toSessionMessages({ info: { id: "cmd", role: "user" }, parts: ["/copy-last user"] }, "cmd")).toEqual([]);
+    expect(mapper.toSessionMessages({ info: { id: "cmd", role: "user" }, parts: ["/copy-last user"] }, MessageId.fromString("cmd"))).toEqual([]);
   });
 
   it("returns an empty list for unsupported entries", () => {

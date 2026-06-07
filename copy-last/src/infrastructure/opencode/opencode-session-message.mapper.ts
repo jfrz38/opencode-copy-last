@@ -1,22 +1,23 @@
+import type { MessageId } from "../../domain/message/message-id.value-object.js";
 import { SessionMessage, type SessionMessageRole } from "../../domain/message/session-message.js";
 import { CopyTarget } from "../../domain/command/copy-target.js";
 import type { OpenCodeValueReader } from "./opencode-value-reader.js";
 
 export interface OpenCodeSessionMessageMapperContract {
-  toSessionMessages(entry: unknown, excludeMessageID?: string): SessionMessage[]
+  toSessionMessages(entry: unknown, excludeMessageID?: MessageId): SessionMessage[]
 }
 
 export class OpenCodeSessionMessageMapper implements OpenCodeSessionMessageMapperContract {
   constructor(private readonly valueReader: OpenCodeValueReader) { }
 
-  toSessionMessages(entry: unknown, excludeMessageID?: string): SessionMessage[] {
+  toSessionMessages(entry: unknown, excludeMessageID?: MessageId): SessionMessage[] {
     if (!this.valueReader.isRecord(entry)) {
       return [];
     }
 
     const info = this.valueReader.isRecord(entry.info) ? entry.info : entry;
     const id = this.valueReader.string(info.id) ?? this.valueReader.string(info.messageID);
-    if (excludeMessageID && id === excludeMessageID) {
+    if (excludeMessageID?.equals(id)) {
       return [];
     }
 
