@@ -36,6 +36,25 @@ export class CopyTarget {
     return this.target === value;
   }
 
+  isAgent(): boolean {
+    return this.target === COPY_TARGET.AGENT;
+  }
+
+  isUser(): boolean {
+    return this.target === COPY_TARGET.USER;
+  }
+
+  isPair(): boolean {
+    return this.target === COPY_TARGET.PAIR;
+  }
+
+  toMessageRole(): MessageCopyTargetValue | undefined {
+    if (this.target === COPY_TARGET.PAIR) {
+      return undefined;
+    }
+    return this.target;
+  }
+
   assertMessageRole(): MessageCopyTargetValue {
     if (this.target === COPY_TARGET.PAIR) {
       throw new PairTargetIsNotMessageRoleError();
