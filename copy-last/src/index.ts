@@ -6,19 +6,17 @@ import { isCopyLastError } from "./domain/errors/copy-last.error.js";
 import { MarkdownMessageFormatter } from "./domain/message/markdown-message-formatter.service.js";
 import { MessageSelector } from "./domain/message/message-selector.service.js";
 import { ClipboardyClipboardWriter } from "./infrastructure/clipboard/clipboardy-clipboard-writer.adapter.js";
-import { OpenCodeCommandEventMapper } from "./infrastructure/opencode/opencode-command-event.mapper.js";
-import { OpenCodeCommandEventParser } from "./infrastructure/opencode/opencode-command-event-parser.adapter.js";
+import { abortHandledCopyLastCommand } from "./infrastructure/opencode/opencode-command-flow-control.js";
 import { OpenCodeNotifier } from "./infrastructure/opencode/opencode-notifier.adapter.js";
 import { OpenCodeSessionMessageMapper } from "./infrastructure/opencode/opencode-session-message.mapper.js";
 import { OpenCodeSessionReader } from "./infrastructure/opencode/opencode-session-reader.adapter.js";
 import { OpenCodeValueReader } from "./infrastructure/opencode/opencode-value-reader.js";
 
+const COMMAND_NAME = "copy-last";
+
 export default (async ({ client }) => {
-  const valueReader = new OpenCodeValueReader();
-  const commandEventMapper = new OpenCodeCommandEventMapper(valueReader);
-  const commandEventParser = new OpenCodeCommandEventParser(commandEventMapper);
+  const sessionMessageMapper = new OpenCodeSessionMessageMapper(new OpenCodeValueReader());
   const notifier = new OpenCodeNotifier(client);
-  const sessionMessageMapper = new OpenCodeSessionMessageMapper(valueReader);
   const useCase = new CopyLastUseCase(
     new OpenCodeSessionReader(client, sessionMessageMapper),
     new ClipboardyClipboardWriter(),
@@ -28,18 +26,23 @@ export default (async ({ client }) => {
   );
 
   return {
-    event: async (input: unknown) => {
-      const commandEvent = commandEventParser.parse(input);
-      if (!commandEvent) {
+    "command.execute.before": async (input) => {
+      if (input.command !== COMMAND_NAME) {
         return;
       }
 
       try {
-        const result = await useCase.execute(new CopyLastRequest(commandEvent.arguments, commandEvent.sessionID, commandEvent.messageID));
+        const result = await useCase.execute(
+          new CopyLastRequest(input.arguments, input.sessionID),
+        );
         await notifier.success(result.command);
       } catch (error) {
-        await notifier.error(isCopyLastError(error) ? error.message : "Failed to copy messages");
+        await notifier.error(
+          isCopyLastError(error) ? error.message : "Failed to copy messages",
+        );
       }
+
+      abortHandledCopyLastCommand();
     },
   };
 }) satisfies Plugin;

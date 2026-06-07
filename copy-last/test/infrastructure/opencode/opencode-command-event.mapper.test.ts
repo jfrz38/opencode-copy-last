@@ -5,15 +5,12 @@ import { OpenCodeValueReader } from "../../../src/infrastructure/opencode/openco
 const mapper = new OpenCodeCommandEventMapper(new OpenCodeValueReader());
 
 describe("OpenCodeCommandEventMapper", () => {
-  it("parses command.executed events", () => {
+  it("parses command.execute.before events", () => {
     expect(mapper.toCopyLastCommandEvent({
-      type: "command.executed",
-      properties: {
-        name: "copy-last",
-        sessionID: "session-1",
-        arguments: "user 2",
-        messageID: "cmd",
-      },
+      command: "copy-last",
+      sessionID: "session-1",
+      arguments: "user 2",
+      messageID: "cmd",
     })).toEqual({
       sessionID: "session-1",
       arguments: "user 2",
@@ -21,39 +18,26 @@ describe("OpenCodeCommandEventMapper", () => {
     });
   });
 
-  it("parses command.executed events with array arguments", () => {
+  it("parses events with empty arguments", () => {
     expect(mapper.toCopyLastCommandEvent({
-      event: {
-        name: "command.executed",
-        properties: {
-          command: "copy-last",
-          sessionId: "session-1",
-          arguments: ["user", "2"],
-          messageId: "cmd",
-        },
-      },
+      command: "copy-last",
+      sessionID: "session-1",
+      arguments: "",
     })).toEqual({
       sessionID: "session-1",
-      arguments: ["user", "2"],
-      messageID: "cmd",
-    });
-  });
-  it("parses marker fallback events", () => {
-    expect(mapper.toCopyLastCommandEvent({
-      sessionID: "session-1",
-      prompt: "OPENCODE_COPY_LAST_COMMAND pair 2",
-      messageID: "cmd",
-    })).toEqual({
-      sessionID: "session-1",
-      arguments: "pair 2",
-      messageID: "cmd",
+      arguments: "",
+      messageID: undefined,
     });
   });
 
   it("ignores unsupported events", () => {
     expect(mapper.toCopyLastCommandEvent(undefined)).toBeUndefined();
-    expect(mapper.toCopyLastCommandEvent({ type: "command.executed", properties: { name: "other", sessionID: "session-1" } })).toBeUndefined();
-    expect(mapper.toCopyLastCommandEvent({ type: "command.executed", properties: { name: "copy-last" } })).toBeUndefined();
-    expect(mapper.toCopyLastCommandEvent({ prompt: "other", sessionID: "session-1" })).toBeUndefined();
+    expect(mapper.toCopyLastCommandEvent({ command: "other", sessionID: "session-1" })).toBeUndefined();
+    expect(mapper.toCopyLastCommandEvent({ command: "copy-last" })).toBeUndefined();
+    expect(mapper.toCopyLastCommandEvent({ command: "copy-last", sessionID: "session-1" })).toEqual({
+      sessionID: "session-1",
+      arguments: "",
+      messageID: undefined,
+    });
   });
 });

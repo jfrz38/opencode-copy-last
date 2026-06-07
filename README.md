@@ -48,9 +48,7 @@ Defaults to `agent 1`. `me` maps to `user`; `us` maps to `pair`. `you` is intent
 
 ## Behavior
 
-The plugin listens for OpenCode's `command.executed` event for `copy-last`, reads the current session, excludes the command message itself, formats the selected messages as Markdown, copies them to the clipboard, and shows a toast.
-
-OpenCode currently does not expose a documented plugin API to cancel a custom command before it is submitted to the model. This plugin handles the command as early as the event stream allows and keeps the marker text isolated from copied output.
+The plugin intercepts the `/copy-last` command via OpenCode's `command.execute.before` hook, reads the current session, formats the selected messages as Markdown, copies them to the clipboard, and shows a toast. It then throws a sentinel error to abort the normal command flow, preventing any interaction with the LLM.
 
 ## Development
 

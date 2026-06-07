@@ -4,7 +4,7 @@ import { OpenCodeCommandEventParser } from "../../../src/infrastructure/opencode
 
 describe("OpenCodeCommandEventParser", () => {
   it("maps command events", () => {
-    const input = { type: "command.executed" };
+    const input = { command: "copy-last", sessionID: "session-1" };
     const commandEvent = {
       sessionID: "session-1",
       arguments: "user 2",
