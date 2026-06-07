@@ -4,8 +4,7 @@
   "description": "Copy recent agent, user, or user-agent messages from the current OpenCode session.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jfrz38/opencode-copy-last.git",
-    "directory": "copy-last"
+    "url": "https://github.com/jfrz38/opencode-copy-last.git"
   },
   "type": "module",
   "main": "dist/index.js",
