@@ -1,4 +1,4 @@
-import type { Plugin } from "@opencode-ai/plugin";
+import type { Config, Plugin } from "@opencode-ai/plugin";
 import { CopyLastRequest } from "./application/copy-last/copy-last.request.js";
 import { CopyLastUseCase } from "./application/copy-last/copy-last.use-case.js";
 import { CopyLastCommandParser } from "./domain/command/copy-last-command-parser.service.js";
@@ -28,7 +28,14 @@ export default (async ({ client }) => {
   );
 
   return {
-    "command.execute.before": async (input) => {
+    config: async (input: Config) => {
+      input.command ??= {};
+      input.command["copy-last"] = {
+        template: "/copy-last [agent|user|pair] [count]",
+        description: "Copy recent session messages to the clipboard",
+      };
+    },
+    "command.execute.before": async (input: unknown) => {
       const event = commandEventParser.parse(input);
       if (!event) {
         return;
