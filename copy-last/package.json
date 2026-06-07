@@ -1,0 +1,65 @@
+{
+  "name": "opencode-copy-last",
+  "version": "0.1.0",
+  "description": "Copy recent agent, user, or user-agent messages from the current OpenCode session.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jfrz38/opencode-copy-last.git",
+    "directory": "copy-last"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "packageManager": "pnpm@11.1.3",
+  "scripts": {
+    "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\"",
+    "build": "pnpm clean && tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json",
+    "prepack": "pnpm build",
+    "prepublishOnly": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "clipboard",
+    "copy-last",
+    "ai"
+  ],
+  "author": "José F. Ruiz Zamora <jrz899@inlumine.ual.es>",
+  "license": "MIT",
+  "homepage": "https://github.com/jfrz38/opencode-copy-last#readme",
+  "bugs": {
+    "url": "https://github.com/jfrz38/opencode-copy-last/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "clipboardy": "4.0.0"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "1.16.2",
+    "@types/node": "20.19.0",
+    "eslint": "10.4.1",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.60.1",
+    "vitest": "3.2.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
