@@ -72,7 +72,7 @@ jobs:
         uses: jfrz38/check-version-change@v1
         with:
           file-path: package.json
-          package-name: opencode-copy-last
+          package-name: "@jfrz38/opencode-copy-last"
           compare-source: registry
           registry: npm
           fail-on-unchanged: true
