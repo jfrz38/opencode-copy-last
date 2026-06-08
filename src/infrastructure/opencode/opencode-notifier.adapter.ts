@@ -1,5 +1,5 @@
 import type { CopyLastCommand } from "../../domain/command/copy-last-command.js";
-import { COPY_TARGET } from "../../domain/command/copy-target-value.js";
+// import { COPY_TARGET } from "../../domain/command/copy-target-value.js";
 import type { Notifier } from "../../domain/ports/notifier.port.js";
 
 type ToastVariant = "info" | "success" | "warning" | "error";
@@ -18,7 +18,7 @@ export class OpenCodeNotifier implements Notifier {
   constructor(private readonly client: ToastClient) { }
 
   async success(command: CopyLastCommand): Promise<void> {
-    const noun = command.targetValue === COPY_TARGET.PAIR ? COPY_TARGET.PAIR : "message";
+    const noun = "message";
     const plural = command.countValue === 1 ? noun : `${noun}s`;
     await this.showToast(`Copied ${command.countValue} ${command.targetValue} ${plural} to clipboard`, SUCCESS);
   }
