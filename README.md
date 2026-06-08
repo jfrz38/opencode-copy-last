@@ -1,60 +1,117 @@
-# Opencode Copy Last
+# OpenCode Copy Last
 
-Copy the last agent, user, or user-agent pair messages from the current OpenCode session.
+Copy the latest agent, user, or user-agent exchange from your current OpenCode session directly to the clipboard.
 
-The npm package lives in `copy-last/` to keep the repository root focused on project-level docs and planning.
+[![npm](https://img.shields.io/npm/v/@jfrz38/opencode-copy-last)](https://www.npmjs.com/package/@jfrz38/opencode-copy-last)
+[![Build](https://img.shields.io/github/actions/workflow/status/jfrz38/opencode-copy-last/build.yml?branch=main)](https://github.com/jfrz38/opencode-copy-last/actions/workflows/build.yml)
+[![license](https://img.shields.io/npm/l/@jfrz38/opencode-copy-last)](https://github.com/jfrz38/opencode-copy-last/blob/main/LICENSE)
+[![NPM Downloads](https://img.shields.io/npm/dm/@jfrz38/opencode-copy-last)](https://www.npmjs.com/package/@jfrz38/opencode-copy-last)
+
+![Demo](./assets/demo.gif)
+
+## Why?
+
+`@jfrz38/opencode-copy-last` is a small OpenCode plugin for quickly reusing recent conversation context without selecting text manually.
+
+It helps when you want to:
+
+- Paste the last agent answer into an issue, PR, note, or chat.
+- Copy your latest prompt exactly as you wrote it.
+- Export recent user-agent exchanges as clean Markdown.
+- Keep useful context before restarting OpenCode, switching branches, or moving to another tool.
 
 ## Install
+
+Add the plugin to your OpenCode configuration:
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["opencode-copy-last"]
+  "plugin": ["@jfrz38/opencode-copy-last"]
 }
 ```
 
 Restart OpenCode after changing plugin configuration.
 
-## Command
-
-Create `.opencode/commands/copy-last.md` in a project, or `~/.config/opencode/commands/copy-last.md` globally:
-
-```markdown
----
-description: Copy recent session messages to the clipboard
----
-
-OPENCODE_COPY_LAST_COMMAND $ARGUMENTS
-```
-
-Usage:
+## Usage
 
 ```text
 /copy-last [agent|user|pair] [count]
 ```
 
-Examples:
+By default, it copies the latest agent message:
 
 ```text
 /copy-last
+```
+
+## Examples
+
+Copy the latest agent response:
+
+```text
+/copy-last
+```
+
+Copy the latest two agent responses:
+
+```text
 /copy-last agent 2
+```
+
+Copy your latest prompt:
+
+```text
 /copy-last user
+```
+
+Copy the latest three user-agent exchanges:
+
+```text
 /copy-last pair 3
+```
+
+Use shorter aliases when you prefer:
+
+```text
 /copy-last me
 /copy-last us 2
 ```
 
-Defaults to `agent 1`. `me` maps to `user`; `us` maps to `pair`. `you` is intentionally not supported because it is ambiguous.
+## Targets
 
-## Behavior
+- `agent`: copies the latest assistant/agent messages.
+- `user`: copies the latest user messages.
+- `pair`: copies complete user-agent exchanges.
+- `me`: alias for `user`.
+- `us`: alias for `pair`.
 
-The plugin intercepts the `/copy-last` command via OpenCode's `command.execute.before` hook, reads the current session, formats the selected messages as Markdown, copies them to the clipboard, and shows a toast. It then throws a sentinel error to abort the normal command flow, preventing any interaction with the LLM.
+`you` is intentionally unsupported because it is ambiguous.
 
-## Development
+## Output Format
 
-```bash
-cd copy-last
-pnpm install
-pnpm build
-pnpm test
+Single messages are copied as trimmed Markdown content.
+
+Pairs are copied like this:
+
+```md
+## User
+
+Your prompt here
+
+## Agent
+
+The agent response here
 ```
+
+Multiple copied items are separated with a Markdown horizontal rule:
+
+```md
+---
+```
+
+## How It Works
+
+The plugin registers the `/copy-last` command with OpenCode and intercepts it before it reaches the LLM. It reads the current session, selects the requested messages, formats them as Markdown, copies the result to the clipboard, and shows a toast.
+
+Because the command is handled locally by the plugin, running `/copy-last` does not send a new prompt to the model.
