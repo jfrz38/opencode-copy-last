@@ -69,7 +69,7 @@ jobs:
 
       - id: version-check
         name: Check version is not already published
-        uses: jfrz38/check-version-change@v1.1.0
+        uses: jfrz38/check-version-change@v1.2.0
         with:
           file-path: package.json
           package-name: opencode-copy-last
