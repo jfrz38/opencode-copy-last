@@ -53,15 +53,15 @@
     "node": ">=20"
   },
   "dependencies": {
-    "clipboardy": "4.0.0"
+    "clipboardy": "5.3.1"
   },
   "devDependencies": {
     "@opencode-ai/plugin": "1.16.2",
-    "@types/node": "20.19.0",
+    "@types/node": "25.9.1",
     "eslint": "10.4.1",
-    "typescript": "5.8.3",
+    "typescript": "6.0.3",
     "typescript-eslint": "8.60.1",
-    "vitest": "3.2.3"
+    "vitest": "4.1.8"
   },
   "publishConfig": {
     "access": "public"
