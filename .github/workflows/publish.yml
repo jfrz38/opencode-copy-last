@@ -1,0 +1,104 @@
+name: Publish Package
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Verify workflow runs from main
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "Publish must be run from main. Current ref is $GITHUB_REF" >&2
+            exit 1
+          fi
+
+      - name: Resolve latest release
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="$(gh release list --repo "$GITHUB_REPOSITORY" --limit 1 --json tagName --jq '.[].tagName')"
+          if [ -z "$TAG" ]; then
+            echo "No GitHub release found." >&2
+            exit 1
+          fi
+
+          VERSION="${TAG#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Verify GitHub release exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: gh release view "$TAG" --repo "$GITHUB_REPOSITORY"
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.version.outputs.tag }}
+          fetch-depth: 0
+
+      - name: Verify release tag is on main
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          git fetch origin main --tags
+          if ! git merge-base --is-ancestor "$TAG" origin/main; then
+            echo "Release tag $TAG is not reachable from main" >&2
+            exit 1
+          fi
+
+      - name: Verify package version matches release
+        env:
+          EXPECTED_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
+          if [ "$PACKAGE_VERSION" != "$EXPECTED_VERSION" ]; then
+            echo "Release version $EXPECTED_VERSION does not match package version $PACKAGE_VERSION" >&2
+            exit 1
+          fi
+
+      - id: version-check
+        name: Check version is not already published
+        uses: jfrz38/check-version-change@v1
+        with:
+          file-path: package.json
+          package-name: opencode-copy-last
+          compare-source: registry
+          registry: npm
+          fail-on-unchanged: true
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6.0.8
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+          registry-url: "https://registry.npmjs.org"
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+
+      - name: Install dependencies
+        run: make install-frozen
+
+      - name: Run checks
+        run: make check
+
+      - name: Package
+        run: make package
+
+      - name: Verify npm package contents
+        run: pnpm publish --dry-run --access public --no-git-checks
+
+      - name: Publish to npm
+        run: pnpm publish --access public --provenance --no-git-checks
