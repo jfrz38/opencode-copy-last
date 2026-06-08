@@ -1,0 +1,48 @@
+name: Bump Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version component to bump (patch, minor, major)'
+        required: true
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      base_branch:
+        description: 'Branch to bump and target with the pull request'
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ inputs.base_branch }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bump version
+        uses: jfrz38/version-bump-action@v0.2.0
+        with:
+          bump: ${{ inputs.bump }}
+          strategy: npm
+          version-file: package.json
+          base-branch: ${{ inputs.base_branch }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: bump version to {new-version}"
+          pr-title: "bump: bump to {new-version}"
+          pr-body: "Bumps the version using a {bump} bump."
