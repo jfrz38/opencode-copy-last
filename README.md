@@ -22,7 +22,13 @@ It helps when you want to:
 
 ## Install
 
-Add the plugin to your OpenCode configuration:
+Install via CLI:
+
+```bash
+opencode plugin @jfrz38/opencode-copy-last@latest --global 
+```
+
+Or add the plugin to your OpenCode configuration:
 
 ```json
 {
