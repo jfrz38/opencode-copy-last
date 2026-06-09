@@ -1,7 +1,7 @@
 # OpenCode Copy Last
 
 [![npm](https://img.shields.io/npm/v/@jfrz38/opencode-copy-last)](https://www.npmjs.com/package/@jfrz38/opencode-copy-last)
-[![Build](https://img.shields.io/github/actions/workflow/status/jfrz38/opencode-copy-last/build.yml?branch=main)](https://github.com/jfrz38/opencode-copy-last/actions/workflows/build.yml)
+[![Build](https://img.shields.io/github/actions/workflow/status/jfrz38/opencode-copy-last/build.yml)](https://github.com/jfrz38/opencode-copy-last/actions/workflows/build.yml)
 [![license](https://img.shields.io/npm/l/@jfrz38/opencode-copy-last)](https://github.com/jfrz38/opencode-copy-last/blob/main/LICENSE)
 [![NPM Downloads](https://img.shields.io/npm/dm/@jfrz38/opencode-copy-last)](https://www.npmjs.com/package/@jfrz38/opencode-copy-last)
 
@@ -23,7 +23,13 @@ It helps when you want to:
 
 ## Install
 
-Add the plugin to your OpenCode configuration:
+Install via CLI:
+
+```bash
+opencode plugin @jfrz38/opencode-copy-last@latest --global 
+```
+
+Or add the plugin to your OpenCode configuration:
 
 ```json
 {
