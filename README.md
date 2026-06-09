@@ -1,11 +1,12 @@
 # OpenCode Copy Last
 
-Copy the latest agent, user, or user-agent exchange from your current OpenCode session directly to the clipboard.
-
 [![npm](https://img.shields.io/npm/v/@jfrz38/opencode-copy-last)](https://www.npmjs.com/package/@jfrz38/opencode-copy-last)
 [![Build](https://img.shields.io/github/actions/workflow/status/jfrz38/opencode-copy-last/build.yml?branch=main)](https://github.com/jfrz38/opencode-copy-last/actions/workflows/build.yml)
 [![license](https://img.shields.io/npm/l/@jfrz38/opencode-copy-last)](https://github.com/jfrz38/opencode-copy-last/blob/main/LICENSE)
 [![NPM Downloads](https://img.shields.io/npm/dm/@jfrz38/opencode-copy-last)](https://www.npmjs.com/package/@jfrz38/opencode-copy-last)
+
+Copy the latest agent, user, or user-agent exchange from your current OpenCode session directly to the clipboard.
+
 
 ![Demo](./assets/demo.gif)
 
