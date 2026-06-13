@@ -20,7 +20,8 @@ export class OpenCodeNotifier implements Notifier {
   async success(command: CopyLastCommand): Promise<void> {
     const noun = "message";
     const plural = command.countValue === 1 ? noun : `${noun}s`;
-    await this.showToast(`Copied ${command.countValue} ${command.targetValue} ${plural} to clipboard`, SUCCESS);
+    const count = command.isAllCount() ? "all" : command.countValue;
+    await this.showToast(`Copied ${count} ${command.targetValue} ${plural} to clipboard`, SUCCESS);
   }
 
   async error(message: string): Promise<void> {
