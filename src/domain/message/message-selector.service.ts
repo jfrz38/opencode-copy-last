@@ -9,11 +9,12 @@ export type MessageSelection = SessionMessage[] | MessagePair[]
 export class MessageSelector {
   select(messages: SessionMessage[], command: CopyLastCommand): MessageSelection {
     if (command.target.equals(COPY_TARGET.PAIR)) {
-      return this.selectPairs(messages, command.countValue);
+      return this.selectPairs(messages, command.countNumber);
     }
 
     const role = command.target.assertMessageRole();
-    const selected = messages.filter((message) => message.isRole(role)).slice(-command.countValue);
+    const matchingMessages = messages.filter((message) => message.isRole(role));
+    const selected = command.isAllCount() ? matchingMessages : matchingMessages.slice(-command.countNumber);
     if (selected.length === 0) {
       throw new NoMessagesFoundError(role);
     }
@@ -36,7 +37,7 @@ export class MessageSelector {
       }
     }
 
-    const selected = pairs.slice(-count);
+    const selected = count === Number.POSITIVE_INFINITY ? pairs : pairs.slice(-count);
     if (selected.length === 0) {
       throw new NoAnsweredPairsFoundError();
     }

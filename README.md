@@ -7,7 +7,6 @@
 
 Copy the latest agent, user, or user-agent exchange from your current OpenCode session directly to the clipboard.
 
-
 ![Demo](./assets/demo.gif)
 
 ## Why?
@@ -43,7 +42,7 @@ Restart OpenCode after changing plugin configuration.
 ## Usage
 
 ```text
-/copy-last [agent|user|pair] [count]
+/copy-last [agent|user|pair] [count|all]
 ```
 
 By default, it copies the latest agent message:
@@ -78,6 +77,12 @@ Copy the latest three user-agent exchanges:
 /copy-last pair 3
 ```
 
+Copy all complete user-agent exchanges:
+
+```text
+/copy-last pair all
+```
+
 Use shorter aliases when you prefer:
 
 ```text
@@ -94,6 +99,11 @@ Use shorter aliases when you prefer:
 - `us`: alias for `pair`.
 
 `you` is intentionally unsupported because it is ambiguous.
+
+## Count
+
+- `count`: copies the latest matching messages or pairs, from `1` to `20`.
+- `all`: copies every matching message or complete pair for the selected target.
 
 ## Output Format
 

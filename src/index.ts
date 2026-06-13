@@ -31,7 +31,7 @@ export default (async ({ client }) => {
     config: async (input: Config) => {
       input.command ??= {};
       input.command["copy-last"] = {
-        template: "/copy-last [agent|user|pair] [count]",
+        template: "/copy-last [agent|user|pair] [count|all]",
         description: "Copy recent session messages to the clipboard",
       };
     },

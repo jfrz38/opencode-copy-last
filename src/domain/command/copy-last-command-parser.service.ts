@@ -21,11 +21,13 @@ export class CopyLastCommandParser {
         continue;
       }
 
-      if (/^\d+$/.test(token)) {
+      if (/^\d+$/.test(token) || token.toLowerCase() === "all") {
         if (count) {
           throw new DuplicatedCopyCountError();
         }
-        count = CopyCount.fromNumber(Number.parseInt(token, 10));
+        count = token.toLowerCase() === "all"
+          ? CopyCount.all()
+          : CopyCount.fromNumber(Number.parseInt(token, 10));
         continue;
       }
 

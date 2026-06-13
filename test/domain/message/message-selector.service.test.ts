@@ -34,6 +34,25 @@ describe("MessageSelector", () => {
     expect((selected[0] as MessagePair).agent).toBe(messages[3]);
   });
 
+  it("selects all matching role messages", () => {
+    const selected = selector.select(messages, allCommand("user"));
+
+    expect(selected).toHaveLength(3);
+    expect(selected[0]).toBe(messages[0]);
+    expect(selected[1]).toBe(messages[2]);
+    expect(selected[2]).toBe(messages[4]);
+  });
+
+  it("selects all answered pairs", () => {
+    const selected = selector.select(messages, allCommand("pair"));
+
+    expect(selected).toHaveLength(2);
+    expect((selected[0] as MessagePair).user).toBe(messages[0]);
+    expect((selected[0] as MessagePair).agent).toBe(messages[1]);
+    expect((selected[1] as MessagePair).user).toBe(messages[2]);
+    expect((selected[1] as MessagePair).agent).toBe(messages[3]);
+  });
+
   it("throws when no messages match", () => {
     expect(() => selector.select([], command("agent", 1))).toThrow(NoMessagesFoundError);
     expect(() => selector.select([SessionMessage.user("unanswered")], command("pair", 1))).toThrow(NoAnsweredPairsFoundError);
@@ -42,4 +61,8 @@ describe("MessageSelector", () => {
 
 function command(target: "agent" | "user" | "pair", count: number): CopyLastCommand {
   return new CopyLastCommand({ target: CopyTarget.fromValue(target), count: CopyCount.fromNumber(count) });
+}
+
+function allCommand(target: "agent" | "user" | "pair"): CopyLastCommand {
+  return new CopyLastCommand({ target: CopyTarget.fromValue(target), count: CopyCount.all() });
 }
