@@ -1,6 +1,6 @@
 {
   "name": "@jfrz38/opencode-copy-last",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Copy recent agent, user, or user-agent messages from the current OpenCode session.",
   "repository": {
     "type": "git",
