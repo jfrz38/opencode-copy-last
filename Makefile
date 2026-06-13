@@ -29,8 +29,8 @@ test: ## run unit tests
 test-watch: ## run tests in watch mode
 	pnpm run test:watch
 
-check: ## run all quality checks
-	pnpm run check
+check: ## run architecture and package quality checks
+	pnpm exec clean-arch check ./src && pnpm run check
 
 ci: install-frozen check ## install from lockfile and run all checks
 

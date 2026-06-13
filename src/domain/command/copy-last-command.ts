@@ -1,4 +1,4 @@
-import { CopyCount } from "./copy-count.js";
+import { CopyCount, type CopyCountValue } from "./copy-count.js";
 import type { CopyTargetValue } from "./copy-target.js";
 import { CopyTarget } from "./copy-target.js";
 
@@ -19,7 +19,15 @@ export class CopyLastCommand {
     return this.target.value;
   }
 
-  get countValue(): number {
+  get countValue(): CopyCountValue {
     return this.count.value;
+  }
+
+  get countNumber(): number {
+    return this.count.numericValue;
+  }
+
+  isAllCount(): boolean {
+    return this.count.isAll();
   }
 }

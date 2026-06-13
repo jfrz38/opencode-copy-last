@@ -1,6 +1,6 @@
 {
   "name": "@jfrz38/opencode-copy-last",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Copy recent agent, user, or user-agent messages from the current OpenCode session.",
   "repository": {
     "type": "git",
@@ -29,12 +29,14 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json",
+    "arch:check": "clean-arch check ./src",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "package": "pnpm pack",
     "pack:dry-run": "pnpm publish --dry-run",
     "publish:npm": "pnpm publish --access public",
     "prepack": "pnpm build",
-    "prepublishOnly": "pnpm check"
+    "prepublishOnly": "pnpm check",
+    "prepare": "husky"
   },
   "keywords": [
     "opencode",
@@ -56,12 +58,18 @@
     "clipboardy": "5.3.1"
   },
   "devDependencies": {
+    "@jfrz38/clean-architecture-highlighter-cli": "0.1.0",
     "@opencode-ai/plugin": "1.16.2",
     "@types/node": "25.9.1",
     "eslint": "10.4.1",
+    "husky": "9.1.7",
+    "lint-staged": "17.0.7",
     "typescript": "6.0.3",
     "typescript-eslint": "8.60.1",
     "vitest": "4.1.8"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": "eslint --fix"
   },
   "publishConfig": {
     "access": "public"
