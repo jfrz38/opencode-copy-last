@@ -42,7 +42,7 @@ jobs:
         run: gh release view "$TAG" --repo "$GITHUB_REPOSITORY"
 
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.0
         with:
           ref: ${{ steps.version.outputs.tag }}
           fetch-depth: 0
@@ -69,7 +69,7 @@ jobs:
 
       - id: version-check
         name: Check version is not already published
-        uses: jfrz38/check-version-change@v1.2.0
+        uses: jfrz38/check-version-change@v1.3.0
         with:
           file-path: package.json
           package-name: "@jfrz38/opencode-copy-last"
@@ -78,7 +78,7 @@ jobs:
           fail-on-unchanged: true
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v6.0.8
+        uses: pnpm/action-setup@v6.0.9
 
       - name: Setup Node
         uses: actions/setup-node@v6

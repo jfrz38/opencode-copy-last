@@ -29,14 +29,14 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.0
         with:
           ref: ${{ inputs.base_branch }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Bump version
-        uses: jfrz38/version-bump-action@v0.2.0
+        uses: jfrz38/version-bump-action@v0.2.1
         with:
           bump: ${{ inputs.bump }}
           strategy: npm
