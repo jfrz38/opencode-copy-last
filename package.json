@@ -55,18 +55,18 @@
     "node": ">=20"
   },
   "dependencies": {
-    "clipboardy": "5.3.1"
+    "clipboardy": "5.3.2"
   },
   "devDependencies": {
     "@jfrz38/clean-architecture-highlighter-cli": "0.1.0",
-    "@opencode-ai/plugin": "1.17.9",
-    "@types/node": "26.0.0",
-    "eslint": "10.5.0",
+    "@opencode-ai/plugin": "1.18.5",
+    "@types/node": "26.1.1",
+    "eslint": "10.8.0",
     "husky": "9.1.7",
-    "lint-staged": "17.0.8",
+    "lint-staged": "17.2.0",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.62.0",
-    "vitest": "4.1.9"
+    "typescript-eslint": "8.65.0",
+    "vitest": "4.1.10"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": "eslint --fix"
