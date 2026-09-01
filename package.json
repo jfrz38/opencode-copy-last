@@ -59,14 +59,14 @@
   },
   "devDependencies": {
     "@jfrz38/clean-architecture-highlighter-cli": "0.1.0",
-    "@opencode-ai/plugin": "1.18.16",
-    "@types/node": "26.2.0",
-    "eslint": "10.8.1",
+    "@opencode-ai/plugin": "1.18.22",
+    "@types/node": "26.3.0",
+    "eslint": "10.9.1",
     "husky": "9.1.7",
     "lint-staged": "17.3.0",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.67.0",
-    "vitest": "4.1.10"
+    "typescript-eslint": "8.68.0",
+    "vitest": "4.1.11"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": "eslint --fix"
