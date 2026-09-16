@@ -15,7 +15,7 @@ on:
       base_branch:
         description: 'Branch to bump and target with the pull request'
         required: true
-        default: main
+        default: develop
         type: string
 
 permissions:
@@ -43,6 +43,6 @@ jobs:
           version-file: package.json
           base-branch: ${{ inputs.base_branch }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: bump version to {new-version}"
-          pr-title: "bump: bump to {new-version}"
+          commit-message: "chore: bump version to {next-version}"
+          pr-title: "bump: bump to {next-version}"
           pr-body: "Bumps the version using a {bump} bump."
