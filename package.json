@@ -1,6 +1,6 @@
 {
   "name": "@jfrz38/opencode-copy-last",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Copy recent agent, user, or user-agent messages from the current OpenCode session.",
   "repository": {
     "type": "git",
@@ -55,18 +55,18 @@
     "node": ">=20"
   },
   "dependencies": {
-    "clipboardy": "5.3.1"
+    "clipboardy": "5.3.2"
   },
   "devDependencies": {
     "@jfrz38/clean-architecture-highlighter-cli": "0.1.0",
-    "@opencode-ai/plugin": "1.16.2",
-    "@types/node": "25.9.1",
-    "eslint": "10.4.1",
+    "@opencode-ai/plugin": "1.18.22",
+    "@types/node": "26.3.0",
+    "eslint": "10.9.1",
     "husky": "9.1.7",
-    "lint-staged": "17.0.7",
+    "lint-staged": "17.3.0",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.60.1",
-    "vitest": "4.1.8"
+    "typescript-eslint": "8.68.0",
+    "vitest": "4.1.11"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": "eslint --fix"

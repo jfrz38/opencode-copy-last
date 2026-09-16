@@ -31,8 +31,7 @@ export class OpenCodeSessionMessageMapper implements OpenCodeSessionMessageMappe
       return [];
     }
 
-    const time = this.valueReader.isRecord(info.time) ? info.time : undefined;
-    return [SessionMessage.create({ id, role, content, createdAt: this.valueReader.string(info.createdAt) ?? this.valueReader.string(time?.created) })];
+    return [SessionMessage.create({ id, role, content, createdAt: this.extractCreatedAt(info) })];
   }
 
   private extractContent(entry: Record<string, unknown>): string {
@@ -64,7 +63,23 @@ export class OpenCodeSessionMessageMapper implements OpenCodeSessionMessageMappe
     if (type && type !== "text") {
       return "";
     }
+    if (part.synthetic === true || part.ignored === true) {
+      return "";
+    }
     return this.valueReader.string(part.text) ?? this.valueReader.string(part.content) ?? "";
+  }
+
+  private extractCreatedAt(info: Record<string, unknown>): string | undefined {
+    const time = this.valueReader.isRecord(info.time) ? info.time : undefined;
+    return this.normalizeTimestamp(info.createdAt) ?? this.normalizeTimestamp(time?.created);
+  }
+
+  private normalizeTimestamp(value: unknown): string | undefined {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+    }
+    return this.valueReader.string(value);
   }
 
   private normalizeRole(role: string | undefined): SessionMessageRole | undefined {

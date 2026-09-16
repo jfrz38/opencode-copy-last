@@ -24,17 +24,25 @@ export class MessageSelector {
   private selectPairs(messages: SessionMessage[], count: number): MessagePair[] {
     const pairs: MessagePair[] = [];
     let pendingUser: SessionMessage | undefined;
+    let latestAgent: SessionMessage | undefined;
 
     for (const message of messages) {
       if (message.isUser()) {
+        if (pendingUser && latestAgent) {
+          pairs.push(new MessagePair(pendingUser, latestAgent));
+        }
         pendingUser = message;
+        latestAgent = undefined;
         continue;
       }
 
       if (message.isAgent() && pendingUser) {
-        pairs.push(new MessagePair(pendingUser, message));
-        pendingUser = undefined;
+        latestAgent = message;
       }
+    }
+
+    if (pendingUser && latestAgent) {
+      pairs.push(new MessagePair(pendingUser, latestAgent));
     }
 
     const selected = count === Number.POSITIVE_INFINITY ? pairs : pairs.slice(-count);

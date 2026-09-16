@@ -53,6 +53,24 @@ describe("MessageSelector", () => {
     expect((selected[1] as MessagePair).agent).toBe(messages[3]);
   });
 
+  it("pairs a user message with the last agent response in its turn", () => {
+    const turnMessages = [
+      SessionMessage.user("delegate this", { id: "u1" }),
+      SessionMessage.agent("starting a subagent", { id: "a1" }),
+      SessionMessage.agent("final answer", { id: "a2" }),
+      SessionMessage.user("next question", { id: "u2" }),
+      SessionMessage.agent("next answer", { id: "a3" }),
+    ];
+
+    const selected = selector.select(turnMessages, allCommand("pair")) as MessagePair[];
+
+    expect(selected).toHaveLength(2);
+    expect(selected[0].user).toBe(turnMessages[0]);
+    expect(selected[0].agent).toBe(turnMessages[2]);
+    expect(selected[1].user).toBe(turnMessages[3]);
+    expect(selected[1].agent).toBe(turnMessages[4]);
+  });
+
   it("throws when no messages match", () => {
     expect(() => selector.select([], command("agent", 1))).toThrow(NoMessagesFoundError);
     expect(() => selector.select([SessionMessage.user("unanswered")], command("pair", 1))).toThrow(NoAnsweredPairsFoundError);

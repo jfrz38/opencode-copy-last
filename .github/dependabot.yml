@@ -13,6 +13,13 @@ updates:
       dependencies:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "typescript"
+        versions:
+          - ">=7.0.0"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

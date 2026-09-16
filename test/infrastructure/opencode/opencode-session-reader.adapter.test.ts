@@ -41,4 +41,31 @@ describe("OpenCodeSessionReader", () => {
     await expect(new OpenCodeSessionReader(client, mapper).read("session-1")).resolves.toEqual([]);
     expect(mapper.toSessionMessages).not.toHaveBeenCalled();
   });
+
+  it("sorts dated messages chronologically without moving undated messages", async () => {
+    const entries = ["late", "undated", "equal-first", "early", "equal-second"];
+    const mappedMessages = new Map([
+      ["late", SessionMessage.agent("late", { createdAt: "2026-06-07T10:03:00.000Z" })],
+      ["undated", SessionMessage.agent("undated")],
+      ["equal-first", SessionMessage.user("equal first", { createdAt: "2026-06-07T10:02:00.000Z" })],
+      ["early", SessionMessage.user("early", { createdAt: "2026-06-07T10:01:00.000Z" })],
+      ["equal-second", SessionMessage.agent("equal second", { createdAt: "2026-06-07T10:02:00.000Z" })],
+    ]);
+    const client: SessionMessagesClient = {
+      session: { messages: vi.fn(async () => entries) },
+    };
+    const mapper: OpenCodeSessionMessageMapperContract = {
+      toSessionMessages: vi.fn((entry) => [mappedMessages.get(entry as string)!]),
+    };
+
+    const messages = await new OpenCodeSessionReader(client, mapper).read("session-1");
+
+    expect(messages.map((message) => message.content)).toEqual([
+      "early",
+      "undated",
+      "equal first",
+      "equal second",
+      "late",
+    ]);
+  });
 });
