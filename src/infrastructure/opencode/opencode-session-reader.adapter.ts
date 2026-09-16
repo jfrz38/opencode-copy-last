@@ -21,6 +21,25 @@ export class OpenCodeSessionReader implements SessionReader {
       return [];
     }
 
-    return response.flatMap((entry) => this.mapper.toSessionMessages(entry, excludeMessageID));
+    const messages = response.flatMap((entry) => this.mapper.toSessionMessages(entry, excludeMessageID));
+    return this.sortChronologically(messages);
+  }
+
+  private sortChronologically(messages: SessionMessage[]): SessionMessage[] {
+    const datedMessages = messages
+      .map((message, index) => ({ message, index, timestamp: this.timestampOf(message) }))
+      .filter((entry): entry is typeof entry & { timestamp: number } => entry.timestamp !== undefined)
+      .sort((left, right) => left.timestamp - right.timestamp || left.index - right.index);
+
+    let datedIndex = 0;
+    return messages.map((message) => this.timestampOf(message) === undefined ? message : datedMessages[datedIndex++].message);
+  }
+
+  private timestampOf(message: SessionMessage): number | undefined {
+    if (!message.createdAt) {
+      return undefined;
+    }
+    const timestamp = Date.parse(message.createdAt);
+    return Number.isNaN(timestamp) ? undefined : timestamp;
   }
 }
