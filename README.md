@@ -48,6 +48,8 @@ Restart OpenCode after changing plugin configuration.
 - OpenCode 1.18.29 and newer: supported through the same package.
 - OpenCode older than 1.18.29: not supported.
 
+OpenCode 2 provides the plugin runtime, so `@opencode/plugin` is declared as an optional peer instead of being installed again with its server dependency tree. The shared package entrypoint loads that runtime only when OpenCode 2 invokes it, keeping the OpenCode 1 entrypoint independent.
+
 ## Usage
 
 ```text

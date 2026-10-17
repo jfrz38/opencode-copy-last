@@ -1,4 +1,4 @@
-import { Rpc } from "@opencode/plugin";
+import { Rpc } from "@opencode/plugin/rpc";
 
 export type CopyLastStatusVariant = "success" | "error";
 
