@@ -21,7 +21,7 @@ export class OpenCodeSessionMessageMapper implements OpenCodeSessionMessageMappe
       return [];
     }
 
-    const role = this.normalizeRole(this.valueReader.string(info.role) ?? this.valueReader.string(info.author));
+    const role = this.normalizeRole(this.readRole(info));
     if (!role) {
       return [];
     }
@@ -46,10 +46,25 @@ export class OpenCodeSessionMessageMapper implements OpenCodeSessionMessageMappe
       return infoText;
     }
 
+    // OpenCode 2 assistant messages carry their text parts inside "content".
+    if (Array.isArray(entry.content)) {
+      return this.joinParts(entry.content);
+    }
+
     if (!Array.isArray(entry.parts)) {
       return "";
     }
-    return entry.parts.map((part) => this.extractPartText(part)).filter(Boolean).join("\n\n");
+    return this.joinParts(entry.parts);
+  }
+
+  private joinParts(parts: unknown[]): string {
+    return parts.map((part) => this.extractPartText(part)).filter(Boolean).join("\n\n");
+  }
+
+  private readRole(info: Record<string, unknown>): string | undefined {
+    return this.valueReader.string(info.role)
+      ?? this.valueReader.string(info.author)
+      ?? this.valueReader.string(info.type);
   }
 
   private extractPartText(part: unknown): string {

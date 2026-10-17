@@ -70,4 +70,38 @@ describe("OpenCodeSessionMessageMapper", () => {
 
     expect(messages[0].createdAt).toBe(new Date(createdAt).toISOString());
   });
+
+  it("normalizes OpenCode 2 context messages", () => {
+    const createdAt = Date.UTC(2026, 5, 7, 10, 0);
+    const userMessages = mapper.toSessionMessages({
+      id: "u1",
+      type: "user",
+      text: "how do I test this?",
+      time: { created: createdAt },
+    });
+    const agentMessages = mapper.toSessionMessages({
+      id: "a1",
+      type: "assistant",
+      time: { created: createdAt },
+      content: [
+        { type: "reasoning", text: "private reasoning" },
+        { type: "tool", text: "tool output" },
+        { type: "text", text: "run vitest" },
+        { type: "text", text: "then lint" },
+      ],
+    });
+
+    expect(userMessages).toHaveLength(1);
+    expect(userMessages[0].role).toBe("user");
+    expect(userMessages[0].content).toBe("how do I test this?");
+    expect(userMessages[0].createdAt).toBe(new Date(createdAt).toISOString());
+    expect(agentMessages).toHaveLength(1);
+    expect(agentMessages[0].role).toBe("agent");
+    expect(agentMessages[0].content).toBe("run vitest\n\nthen lint");
+  });
+
+  it("ignores OpenCode 2 context messages that carry no visible text", () => {
+    expect(mapper.toSessionMessages({ id: "s1", type: "synthetic", text: "done" })).toEqual([]);
+    expect(mapper.toSessionMessages({ id: "a2", type: "assistant", content: [{ type: "reasoning", text: "hidden" }] })).toEqual([]);
+  });
 });
