@@ -69,7 +69,7 @@ jobs:
 
       - id: version-check
         name: Check version is not already published
-        uses: jfrz38/check-version-change@v1.4.0
+        uses: jfrz38/check-version-change@v1.5.0
         with:
           file-path: package.json
           package-name: "@jfrz38/opencode-copy-last"
@@ -81,7 +81,7 @@ jobs:
         uses: pnpm/action-setup@v6.1.0
 
       - name: Setup Node
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: '22.x'
           registry-url: "https://registry.npmjs.org"
