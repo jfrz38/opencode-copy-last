@@ -49,6 +49,8 @@ require_conventional = false
 protect_breaking_commits = true
 commit_parsers = [
     { message = "^Merge ", skip = true },
+    { message = "^chore\\(ci\\): add git-cliff changelog$", skip = true },
+    { message = "^docs\\(changelog\\): backfill release history$", skip = true },
     { message = "^(remove|delete)(\\([^)]+\\))?:", group = "Removed" },
     { message = "^.*: (remove|delete)\\b", group = "Removed" },
     { message = "^feat(\\([^)]+\\))?!?:", group = "Added" },
