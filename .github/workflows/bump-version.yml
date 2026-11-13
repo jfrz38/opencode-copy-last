@@ -36,11 +36,12 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Bump version
-        uses: jfrz38/version-bump-action@v0.3.0
+        uses: jfrz38/version-bump-action@7a76804803c0ae5dc7c5d8d1ac7bfcf4fbbb4d6f # v0.4.0
         with:
           bump: ${{ inputs.bump }}
           strategy: npm
           version-file: package.json
+          changelog: git-cliff
           base-branch: ${{ inputs.base_branch }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: bump version to {next-version}"
